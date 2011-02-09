@@ -1,0 +1,14 @@
+{
+	"name": "Chrome RapidReload",
+	"version": "1.0",
+	"description": "Reloads the current tab whenever files change in monitored directories (requires companion monitor app)",
+	"icons": { "128": "icon.png" },
+	"background_page": "bg.html",
+	"permissions": [
+		"tabs","http://*/*","https://*/*"
+	],
+	"browser_action": {
+		"default_title": "Chrome RapidReload",
+		"default_icon": "rapidreload.png"
+	}
+}

@@ -1,0 +1,69 @@
+﻿<script>
+var connection = null;
+var updateCounter = 0;
+var currentState = null;
+var states = {
+	connecting : {badge:'...',background:[0,255,0,255],title:'Connecting...'},
+	connected : {badge:'on',background:[0,255,0,255],title:'Connected!'},
+	disabled : {badge:'off',background:[200,200,200,255],title:'Chrome RapidReload (Disabled)'}
+}
+
+window.onload = function() {
+	// enable/disable on icon clicks
+	chrome.browserAction.onClicked.addListener(function() {
+		localStorage.websocketActive = localStorage.websocketActive == "false"
+	});
+
+	// start a loop that ensures the connection is there.
+	setInterval(ensureConnectionLoop, 100);
+}
+
+function ensureConnectionLoop() {
+	if (localStorage.websocketActive == "true") {
+		// attempt connection if we're not already attempting one...
+		if (connection == null) {
+			// connecting...
+			setState(states.connecting);
+			chrome.browserAction.setBadgeText({ text: ['.', '..', '...'][++updateCounter % 3] });
+			
+			// start connection
+			connection = new WebSocket("ws://localhost:1984/chromerapidreload");
+			connection.onmessage = reloadCurrentTab
+			connection.onopen = function() { setState(states.connected); }
+			connection.onerror = connection.onclose = closeConnection;
+		}
+	} else {
+		// close current connection (if there is one)
+		closeConnection();
+		
+		// go to disabled state
+		setState(states.disabled);
+	}
+}
+
+function closeConnection() {
+	if (connection != null) {
+		connection.close();
+		connection = null;
+	}
+}
+
+function setState(state) {
+	if (currentState != state) {
+		chrome.browserAction.setBadgeBackgroundColor({ color: state.background });
+		chrome.browserAction.setBadgeText({ text: state.badge });
+		chrome.browserAction.setTitle({ title: state.title });
+		currentState = state;
+	} 
+}
+
+var reloadTimeout = 0;
+function reloadCurrentTab() {
+	// we'll often get a ton of reload events at once, so this timeout simple bunches them 
+	// all into a single reload call
+	clearInterval(reloadTimeout);
+	reloadTimeout = setTimeout(function() {
+		chrome.tabs.executeScript(null, {code:'location.reload()'},null)
+	},50)
+}
+</script>
