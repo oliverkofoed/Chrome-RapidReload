@@ -41,22 +41,27 @@ Installation and usage
 Installation is very, very simple:
 
 1.	Install the Google Chrome extension from 
+
 	https://github.com/oliverkofoed/Chrome-RapidReload/raw/master/Download/Plugin.crx
 	
 2.	Start "Chrome RapidReload Monitor.exe"
 	Add it to your startup items for extra bonus points
+	
 	https://github.com/oliverkofoed/Chrome-RapidReload/raw/master/Download/Chrome%20RapidReload.exe
 	
 Usage is also very simple
 
 1.	Click the new Chrome RapidReload tray icon:
+
 	![](https://github.com/oliverkofoed/Chrome-RapidReload/raw/master/screenshot-trayicon.png)
 
 	and select which directories to monitor in the dialog: 
+	
 	![](https://github.com/oliverkofoed/Chrome-RapidReload/raw/master/screenshot-directoryselector.png)
    
 2.	Click the Chrome RapidReload icon in Google Chrome
 	to enable or disable the plugin in the browser.
+	
 	![](https://github.com/oliverkofoed/Chrome-RapidReload/raw/master/screenshot-browsericon.png)
 
 The icon in Google Chrome will let you know when a
