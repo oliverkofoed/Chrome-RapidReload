@@ -12,6 +12,7 @@
     <AssemblyName>Chrome RapidReload</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <ApplicationIcon>largeicon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -82,10 +83,17 @@
       <DependentUpon>DirectorySelector.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="icon.ico" />
+    <Content Include=".gitignore" />
+    <Content Include="Download\Chrome RapidReload.exe" />
+    <Content Include="largeicon.ico" />
     <Content Include="Plugin\bg.html" />
     <Content Include="Plugin\rapidreload.png" />
     <Content Include="Plugin\icon.png" />
-    <Content Include="Readme.txt" />
+    <Content Include="screenshot-browsericon.png" />
+    <Content Include="screenshot-directoryselector.png" />
+    <Content Include="screenshot-trayicon.png" />
+    <None Include="Download\Plugin.crx" />
+    <None Include="Readme.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
