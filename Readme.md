@@ -42,12 +42,12 @@ Installation is very, very simple:
 
 1.	Install the Google Chrome extension from 
 
-	https://github.com/oliverkofoed/Chrome-RapidReload/raw/master/Download/Plugin.crx
+	[Install Chrome RapidReload](https://github.com/oliverkofoed/Chrome-RapidReload/raw/master/Download/Plugin.crx)
 	
 2.	Start "Chrome RapidReload Monitor.exe"
 	Add it to your startup items for extra bonus points
 	
-	https://github.com/oliverkofoed/Chrome-RapidReload/raw/master/Download/Chrome%20RapidReload.exe
+	[Download Chrome RapidReload Monitor.exe](https://github.com/oliverkofoed/Chrome-RapidReload/raw/master/Download/Chrome%20RapidReload.exe)
 	
 Usage is also very simple
 
