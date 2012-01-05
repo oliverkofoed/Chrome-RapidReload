@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chrome RapidReload", "Chrome RapidReload.csproj", "{281E13C1-A8B1-4BF0-94FA-DEC8E07E53F8}"
 EndProject
 Global

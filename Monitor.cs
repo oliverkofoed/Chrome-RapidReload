@@ -167,18 +167,23 @@ namespace ChromeRapidReload {
 							}
 							break;}
 						case 2: // body
-							if(available >= 8) {
-								Array.Copy(buffer,position, challengeResponse, 8, 8);
-								state = 4;
-							} else { readmore(client.Stream, buffer, ref position, ref available); }
+							state = 4;
+
+							// for old-style websocket connections
+							if( !headers.ContainsKey("sec-websocket-key") ){
+								if(available >= 8) {
+									Array.Copy(buffer,position, challengeResponse, 8, 8);
+									state = 4;
+								} else { readmore(client.Stream, buffer, ref position, ref available); }
+							}
 							break;
 					}
 				}
 				
 				// Send response headers
 				var writer = new StreamWriter(client.Stream, Encoding.UTF8);
-				writer.WriteLine("HTTP/1.1 101 WebSocket Protocol Handshake");
-				writer.WriteLine("Upgrade: WebSocket");
+				writer.WriteLine("HTTP/1.1 101 Switching Protocols");
+				writer.WriteLine("Upgrade: websocket");
 				writer.WriteLine("Connection: Upgrade");
 				writer.WriteLine("Sec-WebSocket-Origin: "+headers["origin"]);
 				writer.WriteLine("Sec-WebSocket-Location: ws://" + headers["host"] + resource);
@@ -186,14 +191,23 @@ namespace ChromeRapidReload {
 				if( headers.TryGetValue("sec-websocket-protocol", out subprotocol)){
 					writer.WriteLine("Sec-WebSocket-Protocol: " + subprotocol);
 				}
-				writer.WriteLine("");
-				writer.Flush();
 
-				// calculate and send the the challenge response
-				addKeyBytes(challengeResponse, 0, headers["sec-websocket-key1"]);
-				addKeyBytes(challengeResponse, 4, headers["sec-websocket-key2"]);
-				var md5response = MD5.Create().ComputeHash(challengeResponse);
-				client.Stream.Write(md5response, 0, md5response.Length);
+				// new style replies
+				if( headers.ContainsKey("sec-websocket-key") ){
+					var key = headers["sec-websocket-key"] + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+					var reply = Convert.ToBase64String(SHA1.Create().ComputeHash(System.Text.Encoding.UTF8.GetBytes(key)));
+					writer.WriteLine("Sec-WebSocket-Accept: " + reply);
+					writer.WriteLine("");
+					writer.Flush();
+				}else{
+					writer.WriteLine("");
+					writer.Flush();
+					// calculate and send the the challenge response
+					addKeyBytes(challengeResponse, 0, headers["sec-websocket-key1"]);
+					addKeyBytes(challengeResponse, 4, headers["sec-websocket-key2"]);
+					var md5response = MD5.Create().ComputeHash(challengeResponse);
+					client.Stream.Write(md5response, 0, md5response.Length);
+				}
 
 				// save clients
 				lock(clients) {clients.Add(client);}
@@ -247,7 +261,8 @@ namespace ChromeRapidReload {
 					clients.RemoveAll(c => !c.TcpClient.Connected);
 
 					// send msg to all active
-					clients.ForEach(c => c.Stream.Write(new byte[] { 0x00, 0x42, 0xFF }, 0, 3)); // very minimal websocket message
+					//clients.ForEach(c => c.Stream.Write(new byte[] { 0x00, 0x42, 0xFF }, 0, 3)); // very minimal websocket message, old style
+					clients.ForEach(c => c.Stream.Write(new byte[] { 0x81, 0x02, 0x68, 0x69 }, 0, 4)); // very minimal websocket message ("hi"), new framing
 				}
 			}catch{} // disregard errors
 		}
